@@ -14,16 +14,13 @@ const int32ToBinary = function(n){
 //    byteOffset
 //    buffer
 //}
-const unpackBitfield_64BE = function(data/*:view*/,palette/*Array<block>*/){//: Array
+const unpackAlignedBitfield_64BE = function*(data/*:view*/,bitDepth/*:int*/){// yields int
     const i32 = new Int32Array(data.buffer,data.byteOffset,data.byteLength/4);
-    let bitLen = Math.ceil(Math.log(palette.length)/Math.log(2));
-    if(bitLen < 4)bitLen = 4;
     const period = Math.floor(64/bitLen);
-    const unpacked = [];
     for(let i = 0; i < 4096; i++){
         const idx = Math.floor(i/period);
         //reverse the offset because of bit order within Int64
-        const offset = 64-bitLen-(i%period)*bitLen;
+        const offset = 64-bitDepth-(i%period)*bitDepth;
         const int1 = i32[idx*2+1];
         const int2 = i32[idx*2];
         let res;
@@ -36,35 +33,32 @@ const unpackBitfield_64BE = function(data/*:view*/,palette/*Array<block>*/){//: 
         }else{
             res = int2<<(offset%32);
         }
-        res = res>>>(32-bitLen);
-        if(res >= palette.length){
-            console.log("DNE in palette:",res,int32ToBinary(int1),int32ToBinary(int2),offset);
-            throw new Error("Block DNE in palette");
-        }
-        unpacked.push(palette[res]);
+        yield res>>>(32-bitDepth);
     }
-    return unpacked;
 };
 
-const packBitfield_64BE = function(data/*:Array<int>*/,palette/*Array<block>*/){
-    //pack the data
-    let bitLen = Math.ceil(Math.log(palette.length)/Math.log(2))
-    if(bitLen < 4)bitLen = 4;
-    const period = Math.floor(64/bitLen);
-    const i32 = new Int32Array(Math.ceil(4096/bitLen));
-    for(let i = 0; i < 4096; i++){
-        const d = data[i];
+class PackedAlignedBitfieldBuilder_64BE{
+    constructor(length/*int*/,bitDepth/*int*/){
+        const period = this.period = Math.floor(64/bitDepth);
+        this.i32 = new Int32Array(Math.ceil(4096/period)*2);
+        this.bitDepth = bitDepth;
+        this.length = length;
+    }
+    set(i/*int*/,val/*int*/){
+        const {period,bitDepth,i32} = this;
         const idx = Math.floor(i/period);
         //reversed offset
         const offset = 64-bitLen-(i%period);
         const int1 = i32[idx*2+1];
         const int2 = i32[idx*2];
         if(offset < 32)
-            i32[idx*2+1] |= d>>>offset;
+            i32[idx*2+1] |= val>>>offset;
         if(offset+bitLen > 32)
-            i32[idx*2] |= d<<(64-offset-bitLen);
+            i32[idx*2] |= val<<(64-offset-bitLen);
     }
-    return new BigInt64Array(i32.buffer);
+    export(){
+        return new BigInt64Array(this.i32.buffer);
+    }
 };
 
 const decodeBlockStates = function(block_states = {palette:["DNE"]}){
@@ -80,14 +74,23 @@ const decodeBlockStates = function(block_states = {palette:["DNE"]}){
         return newarr(4096).map(_=>palette[0]);
     }
     const {data,palette} = block_states;
-    return unpackBitfield_64BE(data,palette);
+    const bitDepth = Math.ceil(Math.log(palette.length)/Math.log(2));
+    const blocks = [];
+    for(let idx of unpackAlignedBitfield_64BE(data,bitDepth)){
+        if(idx >= palette.length){
+            throw new Error(`Block ID ${idx} DNE in palette`);
+        }
+        blocks.push(palette[idx]);
+    }
+    return blocks;
 };
 
 const encodeBlockState = function(blockArr){
     let lastIndex = 0;
     const keys = new Map/*<string,int>*/();
-    const data = [];
     const palette = [];
+    const idmap = [];
+
     for(let i = 0; i < 4096; i++){
         const state = blockArr[i];
         let normalized;
@@ -106,17 +109,22 @@ const encodeBlockState = function(blockArr){
         }else{
             index = keys.get(key);
         }
-        data.push(index);
+        idmap.push(index);
     }
     if(palette.length === 1){
         return {
             palette
         };
     }
-    const i32 = packBitfield_64BE(data,palette);
+    const bitDepth = Math.ceil(Math.log(palette.length)/Math.log(2));
+    const data = PackedAlignedBitfieldBuilder_64BE(4096,bitDepth);
+    for(let i = 0; i < 4096; i++){
+        const idx = idmap[i];
+        data.set(i,idx);
+    }
     return {
         palette,
-        data:new BigInt64Array(i32.buffer);
+        data:data.export()
     };
 };
 
