@@ -47,10 +47,8 @@ export class PackedArray_64BEA_Builder{
         const {period,bitDepth,i32} = this;
         const idx = Math.floor(i/period);
         const offset = bitDepth*(i%period);
-        console.log("offset:",offset,val,idx);
         if(offset < 32){
             i32[idx*2] |= val<<offset;
-            console.log(i32[idx*2]);
             if(offset+bitDepth > 32){
                 i32[idx*2+1] |= val>>>(32-offset);
             }
