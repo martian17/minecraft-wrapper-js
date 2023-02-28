@@ -1,8 +1,8 @@
 import {unpackArray_64BEA as unpack, PackedArray_64BEA_Builder as Packer} from "../packedArray64BEA.mjs";
 import {newarr,arreq} from "../ds-js/arrutil.mjs";
 
-const len = 1000;
-const depth = 3;
+const len = 1000000;
+const depth = 13;
 
 const source = newarr(len).map(_=>Math.floor(Math.random()*(1<<depth)));
 
