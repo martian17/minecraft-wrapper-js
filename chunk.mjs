@@ -34,7 +34,6 @@ const decodeBlockStates = function(block_states = {palette:["DNE"]}){
                 process.stdout.write("\n");
             }
             console.log(palette);
-            //console.log(blocks);
             throw new Error(`Block ID ${idx} DNE in palette`);
         }
         blocks.push(palette[idx]);
@@ -105,7 +104,6 @@ class Section{
     toNBT(){
         const {nbt} = this;
         if(!this.modified)return nbt;
-        //console.log("encoding");
         nbt.block_states = encodeBlockState(this.blockArr);
         return nbt;
     }
@@ -194,15 +192,8 @@ export class Chunk{
     }
     toBuffer(){
         const {sections,nbt} = this;
-        //console.log(nbt.sections.map(s=>s.block_states));
         nbt.sections = sections.map(section=>section.toNBT());
         nbt.block_entities = this.blockEntities.toNBT();
-        //console.log("saving block entities:",nbt.block_entities);
-        //console.log(nbt.sections.map(s=>s.block_states?.palette));
-        //console.log(nbt.sections.map(s=>s.block_states));
-        let res = encodeNBT({"":nbt});
-        //console.log(res);
-        //console.log(decodeNBT(res));
-        return res;
+        return encodeNBT({"":nbt});
     }
 };
