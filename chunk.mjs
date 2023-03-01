@@ -19,6 +19,20 @@ const decodeBlockStates = function(block_states = {palette:["DNE"]}){
     const blocks = [];
     for(let idx of unpackArray_64BEA(data,bitDepth,4096)){
         if(idx >= palette.length){
+            const arr = [...unpackArray_64BEA(data,bitDepth,4096)];
+            console.log("");
+            for(let y = 0; y < 16; y++){
+                for(let z = 0; z < 16; z++){
+                    for(let x = 0; x < 16; x++){
+                        const v = arr[y*256+z*16+x];
+                        process.stdout.write(`${v} `);
+                    }
+                    process.stdout.write("\n");
+                }
+                process.stdout.write("\n");
+            }
+            console.log(palette);
+            //console.log(blocks);
             throw new Error(`Block ID ${idx} DNE in palette`);
         }
         blocks.push(palette[idx]);
