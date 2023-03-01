@@ -1,6 +1,8 @@
 import {Chunk} from "./chunk.mjs";
 import {intdiv, convertEndian} from "./util.mjs";
+import {newarr} from "./ds-js/arrutil.mjs";
 import {promises as fs} from "fs";
+import {BufferBuilder} from "./nbt.js/buffer-builder.js/index.mjs";
 import zlib from "zlib";
 
 export class Region{
@@ -25,7 +27,7 @@ export class Region{
         const chunkmeta = convertEndian(i32[chunkID]);
         const offset = (chunkmeta>>>8)*4096;
         const size = (chunkmeta&0xff)*4096;
-        const timestamp = convertEndian(i32[chunkID+4096]);
+        const timestamp = convertEndian(i32[chunkID+1024]);
         return [offset,size,timestamp];
     }
     chunks = new Map;
@@ -89,28 +91,31 @@ export class Region{
         const buff = new BufferBuilder(this.buffer.byteLength,8192);
         let offset = 2;
         for(let [_,id,compressed] of compressedChunks){
-            const timestamp = Date.now()/1000|0;
-            const size = Math.ceil(compressed.byteLength+5/4096);
-            const chunkmeta = (offset<<8)&size;
+            const timestamp = (Date.now()/1000)|0;
+            const size = Math.ceil((compressed.byteLength+5)/4096);
+            const chunkmeta = (offset<<8)|size;
+            if(size !== 1)console.log(size,offset,chunkmeta);
             buff.set_I32BE_aligned(chunkmeta,id);
-            buff.set_I32BE_aligned(timestamp,id+4096);
+            buff.set_I32BE_aligned(timestamp,id+1024);
             const writtenSize = compressed.byteLength+1; 
             buff.set_I32BE_aligned(writtenSize,offset*1024);
             buff.set_U8(2,offset*4096+4);
-            buff.set(compressed,offset*4096+5);
+            buff.set_buffer(compressed,offset*4096+5);
             offset += size;
+            chunkmap[id] = 1;
         }
-        for(let id = 0; id < 1024; i++){
+        for(let id = 0; id < 1024; id++){
             if(chunkmap[id])continue;
             if(i32[id] === 0)continue;
             const timestamp = i32[id+1024];
-            const [offset_bytes,size_bytes] = this.getChunkData(chunk.id);
+            const [offset_bytes,size_bytes] = this.getChunkData(id);
             const size = size_bytes/4096;
-            const chunkmeta = (offset<<8)&size;
+            const chunkmeta = (offset<<8)|size;
+            //console.log(chunkmeta);
             buff.set_I32BE_aligned(chunkmeta,id);
-            buff.set_I32BE_aligned(timestamp,id+4096);
-            buff.set(
-                this.buff.slice(
+            buff.set_I32BE_aligned(timestamp,id+1024);
+            buff.set_buffer(
+                this.buffer.slice(
                     offset_bytes,
                     offset_bytes+size_bytes
                 ),
