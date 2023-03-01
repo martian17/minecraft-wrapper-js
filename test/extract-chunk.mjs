@@ -27,5 +27,5 @@ console.log(`chunk buffer size: ${chunkbuff.length}`);
 console.log(chunkbuff);
 
 await fs.writeFile("./testdata/out.nbt",chunkbuff);
-
+console.log("Chunk NBT extraction completed. Result is stored in ./testdata/out.nbt");
 
