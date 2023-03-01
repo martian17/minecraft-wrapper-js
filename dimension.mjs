@@ -30,9 +30,9 @@ export class Dimension{
         const chunk = await this.getChunk(x,z);
         return await chunk.getBlock(x%16,y,z%16);
     }
-    async setBlock(x,y,z,data){
+    async setBlock(x,y,z,data,entity){
         const chunk = await this.getChunk(x,z);
-        return await chunk.setBlock(x%16,y,z%16,data);
+        return await chunk.setBlock(x%16,y,z%16,data,entity);
     }
     async save(){
         for(let [_,region] of this.regions){
