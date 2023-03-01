@@ -1,5 +1,6 @@
-import {decodeNBT,encodeNBT} from "./nbt.js/index.mjs";
+import {decodeNBT,encodeNBT,NBT_Int,NBT_Byte} from "./nbt.js/index.mjs";
 import {newarr} from "./ds-js/arrutil.mjs";
+import {MultiMap} from "./ds-js/multimap.mjs";
 import {normalizeObject} from "./ds-js/objutil.mjs";
 import {unpackArray_64BEA, PackedArray_64BEA_Builder} from "./packedArray64BEA.mjs";
 
@@ -110,6 +111,51 @@ class Section{
     }
 };
 
+class BlockEntities{
+    entities = new MultiMap;
+    constructor(nbt){
+        const {entities} = this;
+        for(let entity of nbt){
+            const x = entity.x.value;
+            const y = entity.y.value;
+            const z = entity.z.value;
+            if(entities.has(x,y,z)){
+                throw new Error("multiple block entities detected at the same coordinate");
+            }
+            entities.set(x,y,z,entity);
+        }
+    }
+    set(x,y,z,props){
+        const entity = {};
+        if("keepPacked" in props){
+            entity.keepPacked =  new NBT_Byte(props.keepPacked);
+        }else{
+            entity.keepPacked =  new NBT_Byte(0);
+        }
+        entity.x = new NBT_Int(x);
+        entity.y = new NBT_Int(y);
+        entity.z = new NBT_Int(z);
+        if(!"id" in props)throw new Error("id is required in block entity");
+        entity.id = props.id;
+        for(let prop in props){
+            if(prop in entity) continue;
+            entity[prop] = props[prop];
+        }
+        this.entities.set(x,y,z,entity);
+    }
+    delete(x,y,z){
+        this.entities.delete(x,y,z);
+    }
+    toNBT(){
+        const res = [];
+        for(let [x,y,z,entity] of this.entities){
+            res.push(entity);
+        }
+        return res;
+    }
+};
+
+
 export class Chunk{
     constructor(nbt_buffer,id){
         this.id = id;
@@ -143,6 +189,8 @@ export class Chunk{
         const {sections,nbt} = this;
         //console.log(nbt.sections.map(s=>s.block_states));
         nbt.sections = sections.map(section=>section.toNBT());
+        nbt.block_entities = this.blockEntities.toNBT();
+        //console.log("saving block entities:",nbt.block_entities);
         //console.log(nbt.sections.map(s=>s.block_states?.palette));
         //console.log(nbt.sections.map(s=>s.block_states));
         let res = encodeNBT({"":nbt});
