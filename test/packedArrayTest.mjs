@@ -20,7 +20,7 @@ for(let val of unpack(packed,depth,len)){
 console.log(source);
 console.log(unpacked);
 console.log(packed);
-console.log(arreq(source,unpacked));
+console.log(arreq(source,unpacked)?"success":"fail");
 
 
 
