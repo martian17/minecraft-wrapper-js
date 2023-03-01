@@ -168,18 +168,25 @@ export class Chunk{
             this.sections.push(new Section(section));
         }
         this.ymin = this.sections[0].y*16;
+        this.blockEntities = new BlockEntities(nbt.block_entities);
     }
     getBlock(x,y,z){
-        y = y-this.ymin;
-        const sidx = Math.floor(y/16);
-        return this.sections[sidx].getBlock(x,y%16,z);
+        const y0 = y-this.ymin;
+        const sidx = Math.floor(y0/16);
+        return this.sections[sidx].getBlock(x,y0%16,z);
     }
     modified = false;
-    setBlock(x,y,z,data){
+    setBlock(x,y,z,data,entity){
         this.modified = true;
-        y = y-this.ymin;
-        const sidx = Math.floor(y/16);
-        return this.sections[sidx].setBlock(x,y%16,z,data);
+        const y0 = y-this.ymin;
+        const sidx = Math.floor(y0/16);
+        const res = this.sections[sidx].setBlock(x,y0%16,z,data);
+        if(entity){
+            this.blockEntities.set(x,y,z,entity);
+        }else{
+            this.blockEntities.delete(x,y,z);
+        }
+        return res;
     }
     getBlockID(x,y,z){
     }
