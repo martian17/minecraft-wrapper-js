@@ -52,7 +52,7 @@ export class Region{
         const {chunks} = this;
         const chunkID = this.getChunkID(x,z);
         if(chunks.has(chunkID))return chunks.get(chunkID);
-        const chunk = new Chunk(await this.getChunkBuffer(x,z),chunkID);
+        const chunk = new Chunk(await this.getChunkBuffer(chunkID),chunkID);
         chunks.set(chunkID,chunk);
         return chunk;
     }
