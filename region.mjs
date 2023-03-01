@@ -94,7 +94,6 @@ export class Region{
             const timestamp = (Date.now()/1000)|0;
             const size = Math.ceil((compressed.byteLength+5)/4096);
             const chunkmeta = (offset<<8)|size;
-            if(size !== 1)console.log(size,offset,chunkmeta);
             buff.set_I32BE_aligned(chunkmeta,id);
             buff.set_I32BE_aligned(timestamp,id+1024);
             const writtenSize = compressed.byteLength+1; 
@@ -111,7 +110,6 @@ export class Region{
             const [offset_bytes,size_bytes] = this.getChunkData(id);
             const size = size_bytes/4096;
             const chunkmeta = (offset<<8)|size;
-            //console.log(chunkmeta);
             buff.set_I32BE_aligned(chunkmeta,id);
             buff.set_I32BE_aligned(timestamp,id+1024);
             buff.set_buffer(
