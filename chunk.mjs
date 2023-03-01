@@ -15,7 +15,8 @@ const decodeBlockStates = function(block_states = {palette:["DNE"]}){
         }
         return newarr(4096).map(_=>palette[0]);
     }
-    const bitDepth = Math.ceil(Math.log(palette.length)/Math.log(2));
+    let bitDepth = Math.ceil(Math.log(palette.length)/Math.log(2));
+    if(bitDepth < 4)bitDepth = 4;
     const blocks = [];
     for(let idx of unpackArray_64BEA(data,bitDepth,4096)){
         if(idx >= palette.length){
@@ -71,7 +72,8 @@ const encodeBlockState = function(blockArr){
             palette
         };
     }
-    const bitDepth = Math.ceil(Math.log(palette.length)/Math.log(2));
+    let bitDepth = Math.ceil(Math.log(palette.length)/Math.log(2));
+    if(bitDepth < 4)bitDepth = 4;
     const data = new PackedArray_64BEA_Builder(bitDepth,4096);
     for(let i = 0; i < 4096; i++){
         const idx = idmap[i];
