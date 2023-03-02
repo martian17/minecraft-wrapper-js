@@ -7,7 +7,8 @@ import {promises as fs} from "fs";
 
 //prepare ./temp
 execSync(`
-rm -rf ./temp/*
+rm -rf ./temp
+mkdir temp
 cp ./testdata/r.0.0.mca ./temp/
 `.trim());
 
