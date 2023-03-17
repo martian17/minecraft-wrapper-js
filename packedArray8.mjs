@@ -1,4 +1,3 @@
-//todo: test this
 export const packedArrayI8_4_get = function(i8,idx){
 	const super_idx = idx>>>1;
 	const offset = (idx&1)<<2;// 4 or 0
