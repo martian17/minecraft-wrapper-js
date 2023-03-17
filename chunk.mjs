@@ -107,13 +107,13 @@ class Section{
         return packedArrayI8_4_set(this.nbt.BlockLight,y*256+z*16+x);
     }
     setBlockLight(x,y,z,value){
-        return packedArrayI8_4_set(this.nbt.BlockLight,y*256+z*16+x,value);
+        packedArrayI8_4_set(this.nbt.BlockLight,y*256+z*16+x,value);
     }
     getSkyLight(x,y,z){
         return packedArrayI8_4_set(this.nbt.SkyLight,y*256+z*16+x);
     }
     setSkyLight(x,y,z,value){
-        return packedArrayI8_4_set(this.nbt.SkyLight,y*256+z*16+x,value);
+        packedArrayI8_4_set(this.nbt.SkyLight,y*256+z*16+x,value);
     }
 
     toNBT(){
