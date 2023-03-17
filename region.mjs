@@ -1,6 +1,6 @@
 import {Chunk} from "./chunk.mjs";
 import {intdiv, convertEndian} from "./util.mjs";
-import {newarr} from "ds-js/arrutil";
+import {newarr} from "ds-js/arrutil.mjs";
 import {promises as fs} from "fs";
 import {BufferBuilder} from "buffer-builder.js";
 import zlib from "zlib";
