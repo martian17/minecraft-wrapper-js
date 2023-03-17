@@ -101,20 +101,20 @@ class Section{
         this.modified = true;
         this.blockArr[y*256+z*16+x] = data;
     }
-	//todo: test these methods
-	//non iterative base methods
-	getBlockLight(x,y,z){
-		return packedArrayI8_4_set(this.nbt.BlockLight,y*256+z*16+x);
-	}
-	setBlockLight(x,y,z,value){
-		return packedArrayI8_4_set(this.nbt.BlockLight,y*256+z*16+x,value);
-	}
-	getSkyLight(x,y,z){
-		return packedArrayI8_4_set(this.nbt.SkyLight,y*256+z*16+x);
-	}
-	setSkyLight(x,y,z,value){
-		return packedArrayI8_4_set(this.nbt.SkyLight,y*256+z*16+x,value);
-	}
+    //todo: test these methods
+    //non iterative base methods
+    getBlockLight(x,y,z){
+        return packedArrayI8_4_set(this.nbt.BlockLight,y*256+z*16+x);
+    }
+    setBlockLight(x,y,z,value){
+        return packedArrayI8_4_set(this.nbt.BlockLight,y*256+z*16+x,value);
+    }
+    getSkyLight(x,y,z){
+        return packedArrayI8_4_set(this.nbt.SkyLight,y*256+z*16+x);
+    }
+    setSkyLight(x,y,z,value){
+        return packedArrayI8_4_set(this.nbt.SkyLight,y*256+z*16+x,value);
+    }
 
     toNBT(){
         const {nbt} = this;
