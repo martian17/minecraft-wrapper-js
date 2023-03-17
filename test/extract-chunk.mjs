@@ -2,7 +2,7 @@
 
 import {Dimension} from "../dimension.mjs";
 import {execSync} from "child_process";
-import {normalizeObject} from "../ds-js/objutil.mjs";
+import {normalizeObject} from "ds-js/objutil.mjs";
 import {promises as fs} from "fs";
 
 //prepare ./temp

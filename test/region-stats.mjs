@@ -1,6 +1,6 @@
 import {World} from "../index.mjs";
 import {intdiv,convertEndian} from "../util.mjs";
-import {newarr} from "../ds-js/arrutil.mjs";
+import {newarr} from "ds-js/arrutil.mjs";
 
 const path = process.argv[2];
 const [x=0,y=0,z=0] = process.argv.slice(3).map(v=>parseInt(v));
