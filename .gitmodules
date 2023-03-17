@@ -1,9 +1,0 @@
-[submodule "ds-js"]
-	path = ds-js
-	url = git@github.com:martian17/ds-js.git
-[submodule "nbt.js"]
-	path = nbt.js
-	url = git@github.com:martian17/nbt.js.git
-[submodule "obj-schema-validator"]
-	path = obj-schema-validator
-	url = git@github.com:martian17/obj-schema-validator.git
