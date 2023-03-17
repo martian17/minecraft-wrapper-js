@@ -1,11 +1,13 @@
 lockfileVersion: 5.4
 
 specifiers:
+  buffer-builder.js: github:martian17/buffer-builder.js
   ds-js: github:martian17/ds-js
   nbt.js: github:martian17/nbt.js
   obj-schema-validator: github:martian17/obj-schema-validator
 
 dependencies:
+  buffer-builder.js: github.com/martian17/buffer-builder.js/68ca9fee79178346022d05f478bc8d733cf46a38
   ds-js: github.com/martian17/ds-js/28dd4209212515a95b8ef72c272774357652c12d
   nbt.js: github.com/martian17/nbt.js/f4696ff38636b4fa566004a5fbca746f8e25f540
   obj-schema-validator: github.com/martian17/obj-schema-validator/6997ab673c6420db961e4b2f366129e526700f52
