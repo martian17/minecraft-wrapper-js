@@ -1,0 +1,17 @@
+{
+  "name": "minecraft-wrapper-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ds-js": "github:martian17/ds-js",
+    "nbt.js": "github:martian17/nbt.js",
+    "obj-schema-validator": "github:martian17/obj-schema-validator"
+  }
+}
