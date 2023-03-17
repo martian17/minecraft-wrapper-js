@@ -9,11 +9,13 @@ if(!jarPath){
     process.exit();
 }
 
+console.log(jarPath);
+
 //prepare ./temp
 execSync(`
 rm -rf ./temp
 mkdir ./temp
-cp ${jarPath} ./temp/mc.jar
+cp "${jarPath}" ./temp/mc.jar
 mkdir ./temp/jar
 unzip -qq ./temp/mc.jar -d ./temp/jar/
 mv ./temp/jar/assets/minecraft/blockstates ./temp/
