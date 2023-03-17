@@ -102,22 +102,20 @@ class Section{
         this.blockArr[y*256+z*16+x] = data;
     }
 	//todo: test these methods
-	//no side effects
-	setBlockLight(x,y,z,value){
-		const base_idx = y*256+z*16+x;
-		const idx = base_idx>>>1;
-		const offset = (base_idx&1)<<2;
-		const {BlockLight} = this.nbt;
-		const baseData = BlockLight[idx];
-		BlockLight[idx] = (baseData&(0xf0>>>offset))|(value<<offset);
-	}
+	//non iterative base methods
 	getBlockLight(x,y,z){
-		const base_idx = y*256+z*16+x;
-		const idx = base_idx>>>1;
-		const offset = (base_idx&1)<<2;
-		const {BlockLight} = this.nbt;
-		return (BlockLight[idx]>>>offset)&15;
+		return packedArrayI8_4_set(this.nbt.BlockLight,y*256+z*16+x);
 	}
+	setBlockLight(x,y,z,value){
+		return packedArrayI8_4_set(this.nbt.BlockLight,y*256+z*16+x,value);
+	}
+	getSkyLight(x,y,z){
+		return packedArrayI8_4_set(this.nbt.SkyLight,y*256+z*16+x);
+	}
+	setSkyLight(x,y,z,value){
+		return packedArrayI8_4_set(this.nbt.SkyLight,y*256+z*16+x,value);
+	}
+
     toNBT(){
         const {nbt} = this;
         if(!this.modified)return nbt;
