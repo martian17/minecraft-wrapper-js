@@ -1,7 +1,7 @@
-import {decodeNBT,encodeNBT,NBT_Int,NBT_Byte} from "./nbt.js/index.mjs";
-import {newarr} from "./ds-js/arrutil.mjs";
-import {MultiMap} from "./ds-js/multimap.mjs";
-import {normalizeObject} from "./ds-js/objutil.mjs";
+import {decodeNBT,encodeNBT,NBT_Int,NBT_Byte} from "nbt.js";
+import {newarr} from "ds-js/arrutil";
+import {MultiMap} from "ds-js/multimap";
+import {normalizeObject} from "ds-js/objutil";
 import {unpackArray_64BEA, PackedArray_64BEA_Builder} from "./packedArray64BEA.mjs";
 
 const decodeBlockStates = function(block_states = {palette:["DNE"]}){

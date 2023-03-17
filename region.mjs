@@ -1,8 +1,8 @@
 import {Chunk} from "./chunk.mjs";
 import {intdiv, convertEndian} from "./util.mjs";
-import {newarr} from "./ds-js/arrutil.mjs";
+import {newarr} from "ds-js/arrutil";
 import {promises as fs} from "fs";
-import {BufferBuilder} from "./nbt.js/buffer-builder.js/index.mjs";
+import {BufferBuilder} from "buffer-builder.js";
 import zlib from "zlib";
 
 export class Region{
