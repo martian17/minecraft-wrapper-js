@@ -174,38 +174,50 @@ export class Chunk{
         this.id = id;
         const nbt = this.nbt = decodeNBT(nbt_buffer)[""];
         //ignore the heightmap for now
-        this.sections = [];
-        for(let section of nbt.sections){
-            this.sections.push(new Section(section));
-        }
+        this.sections = newarr(nbt.sections.length);
         this.ymin = this.sections[0].y*16;
         this.blockEntities = new BlockEntities(nbt.block_entities);
     }
-    getBlock(x,y,z){
+    getSection(x,y,z){
         const y0 = y-this.ymin;
         const sidx = Math.floor(y0/16);
-        return this.sections[sidx].getBlock(x,y0%16,z);
+        if(!this.sections[sidx])
+            return this.sections[sidx];
+        return this.sections[sidx] = new Section(this.nbt.sections[sidx]);
+    }
+    getBlock(x,y,z){
+        return this.getSection(x,y,z).
+            getBlock(x,(y-this.ymin)%16,z);
     }
     modified = false;
     setBlock(x,y,z,data,entity){
         this.modified = true;
-        const y0 = y-this.ymin;
-        const sidx = Math.floor(y0/16);
-        const res = this.sections[sidx].setBlock(x,y0%16,z,data);
+        this.getSection(x,y,z).
+            setBlock(x,(y-this.ymin)%16,z,data);
         if(entity){
             this.blockEntities.set(x,y,z,entity);
         }else{
             this.blockEntities.delete(x,y,z);
         }
-        return res;
     }
     getBlockID(x,y,z){
     }
     setBlockID(x,y,z,id){
     }
     toBuffer(){
-        const {sections,nbt} = this;
-        nbt.sections = sections.map(section=>section.toNBT());
+        const {nbt} = this;
+        const nbtSections = [];
+        for(let i = 0; i < this.sections.length; i++){
+            const section = this.sections[i];
+            if(!section){
+                // section is not loaded
+                nbtSections.push(this.nbt.sections[i]);
+            }else{
+                // section is loaded
+                nbtSections.push(section.toNBT());
+            }
+        }
+        nbt.sections = nbtSections;
         nbt.block_entities = this.blockEntities.toNBT();
         return encodeNBT({"":nbt});
     }
