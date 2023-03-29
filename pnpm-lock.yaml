@@ -7,15 +7,15 @@ specifiers:
   obj-schema-validator: github:martian17/obj-schema-validator
 
 dependencies:
-  buffer-builder.js: github.com/martian17/buffer-builder.js/68ca9fee79178346022d05f478bc8d733cf46a38
+  buffer-builder.js: github.com/martian17/buffer-builder.js/a720c85e93edccd0b43bee02459fd7f2c5b6d016
   ds-js: github.com/martian17/ds-js/28dd4209212515a95b8ef72c272774357652c12d
-  nbt.js: github.com/martian17/nbt.js/f4696ff38636b4fa566004a5fbca746f8e25f540
+  nbt.js: github.com/martian17/nbt.js/9d995ed0f9427f537d63e6b4f559eb421e078d48
   obj-schema-validator: github.com/martian17/obj-schema-validator/6997ab673c6420db961e4b2f366129e526700f52
 
 packages:
 
-  github.com/martian17/buffer-builder.js/68ca9fee79178346022d05f478bc8d733cf46a38:
-    resolution: {tarball: https://codeload.github.com/martian17/buffer-builder.js/tar.gz/68ca9fee79178346022d05f478bc8d733cf46a38}
+  github.com/martian17/buffer-builder.js/a720c85e93edccd0b43bee02459fd7f2c5b6d016:
+    resolution: {tarball: https://codeload.github.com/martian17/buffer-builder.js/tar.gz/a720c85e93edccd0b43bee02459fd7f2c5b6d016}
     name: buffer-builder.js
     version: 1.0.0
     dev: false
@@ -26,12 +26,12 @@ packages:
     version: 1.0.0
     dev: false
 
-  github.com/martian17/nbt.js/f4696ff38636b4fa566004a5fbca746f8e25f540:
-    resolution: {tarball: https://codeload.github.com/martian17/nbt.js/tar.gz/f4696ff38636b4fa566004a5fbca746f8e25f540}
+  github.com/martian17/nbt.js/9d995ed0f9427f537d63e6b4f559eb421e078d48:
+    resolution: {tarball: https://codeload.github.com/martian17/nbt.js/tar.gz/9d995ed0f9427f537d63e6b4f559eb421e078d48}
     name: nbt.js
     version: 1.0.0
     dependencies:
-      buffer-builder.js: github.com/martian17/buffer-builder.js/68ca9fee79178346022d05f478bc8d733cf46a38
+      buffer-builder.js: github.com/martian17/buffer-builder.js/a720c85e93edccd0b43bee02459fd7f2c5b6d016
     dev: false
 
   github.com/martian17/obj-schema-validator/6997ab673c6420db961e4b2f366129e526700f52:
