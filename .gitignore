@@ -1,2 +1,3 @@
 /test/temp/*
 node_modules
+/generate-assets/temp/*
