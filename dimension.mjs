@@ -3,7 +3,11 @@ import {Region} from "./region.mjs";
 import {intdiv} from "./util.mjs";
 
 export class Dimension{
-    constructor(path){
+    // flags
+    generateChunks = false;
+
+    constructor(world,path){
+        this.world = world;
         this.path = path;
     }
     regions = new Map;
@@ -17,7 +21,7 @@ export class Dimension{
             return regions.get(filename);
         }else{
             //.init() will throw error if file DNE
-            const region = await new Region(filename).init();
+            const region = await new Region(this,filename).init();
             regions.set(filename,region);
             return region;
         }

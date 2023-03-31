@@ -170,7 +170,8 @@ class BlockEntities{
 
 
 export class Chunk{
-    constructor(nbt_buffer,id){
+    constructor(region,nbt_buffer,id){
+        this.region = region;
         this.id = id;
         const nbt = this.nbt = decodeNBT(nbt_buffer)[""];
         //ignore the heightmap for now

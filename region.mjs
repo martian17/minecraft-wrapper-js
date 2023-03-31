@@ -6,7 +6,8 @@ import {BufferBuilder} from "buffer-builder.js";
 import zlib from "zlib";
 
 export class Region{
-    constructor(path){
+    constructor(dimension,path){
+        this.dimension = dimension;
         this.path = path;
     }
     async init(){
@@ -52,7 +53,7 @@ export class Region{
         const {chunks} = this;
         const chunkID = this.getChunkID(x,z);
         if(chunks.has(chunkID))return chunks.get(chunkID);
-        const chunk = new Chunk(await this.getChunkBuffer(chunkID),chunkID);
+        const chunk = new Chunk(this,await this.getChunkBuffer(chunkID),chunkID);
         chunks.set(chunkID,chunk);
         return chunk;
     }

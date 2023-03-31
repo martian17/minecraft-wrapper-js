@@ -6,9 +6,9 @@ import * as Path from "path";
 
 export class World{
     constructor(path){
-        this.overworld = new Dimension(Path.join(path,"region"));
-        this.nether = new Dimension(Path.join(path,"DIM-1/region"));
-        this.end = new Dimension(Path.join(path,"DIM1/region"));
+        this.overworld = new Dimension(this,Path.join(path,"region"));
+        this.nether = new Dimension(this,Path.join(path,"DIM-1/region"));
+        this.end = new Dimension(this,Path.join(path,"DIM1/region"));
     }
     async save(){
         await this.overworld.save();
