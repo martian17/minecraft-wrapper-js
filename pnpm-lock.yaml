@@ -13,7 +13,7 @@ dependencies:
   ds-js: github.com/martian17/ds-js/5add727e3bc0988162c7c180326c602bb77401d4
   nbt.js: github.com/martian17/nbt.js/5d27a6b5d4a3c92171e28935b260aeb3234834a2
   obj-schema-validator: github.com/martian17/obj-schema-validator/6997ab673c6420db961e4b2f366129e526700f52
-  rnbt: github.com/martian17/RNBT/11d73e70d5af4c445f733ae77330d926b416e0e2
+  rnbt: github.com/martian17/RNBT/29d8c37e5f3a288e7d320df96e2c2491b06afb9d
 
 devDependencies:
   eslint: 8.38.0
@@ -659,8 +659,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  github.com/martian17/RNBT/11d73e70d5af4c445f733ae77330d926b416e0e2:
-    resolution: {tarball: https://codeload.github.com/martian17/RNBT/tar.gz/11d73e70d5af4c445f733ae77330d926b416e0e2}
+  github.com/martian17/RNBT/29d8c37e5f3a288e7d320df96e2c2491b06afb9d:
+    resolution: {tarball: https://codeload.github.com/martian17/RNBT/tar.gz/29d8c37e5f3a288e7d320df96e2c2491b06afb9d}
     name: rnbt
     version: 1.0.0
     dependencies:
