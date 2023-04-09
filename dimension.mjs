@@ -21,6 +21,7 @@ export class Dimension{
         }
         region = await new Region(this,rx,rz).init();
         this.regions.set(rx,rz,region);
+        return region;
     }
     async getChunk(x,z){
         const region = await this.getRegion(x,z);
