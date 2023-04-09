@@ -48,7 +48,7 @@ export class Region{
     }
     async readChunkBuffer(offset,size){
         const buffer = Buffer.allocUnsafe(size*SECTOR_SIZE);
-        await this.handle.read(buffer, offset, 0, offset*SECTOR_SIZE, size*SECTOR_SIZE);
+        await this.handle.read(buffer, 0, size*SECTOR_SIZE, offset*SECTOR_SIZE);
         const data_length = buffer[0]<<24|buffer[1]<<16|buffer[2]<<8|buffer[3];
         const scheme = buffer[4];
         if(scheme !== 2/*zlib*/)
