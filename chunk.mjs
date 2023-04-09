@@ -10,6 +10,10 @@ import {promises as fs} from "fs";
 import util from "util";
 import zlib from "zlib";
 
+import Path from "path";
+import * as url from 'url';
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+
 const inflate = util.promisify(zlib.inflate);
 const deflate = util.promisify(zlib.deflate);
 
@@ -185,7 +189,7 @@ export class Chunk{
         return chunk.init(decodeNBT(await inflate(buffer))[""]);
     }
     static async fromEmpty(region,id,x,z){
-        if(!default_rnbt)default_rnbt = await fs.readFile("./chunk-default.rnbt");
+        if(!default_rnbt)default_rnbt = ""+await fs.readFile(Path.join(__dirname,"./chunk-default.rnbt"));
         const nbt = decodeRNBT(default_rnbt);
         nbt.xPos.value = intdiv(x,16)*16;
         nbt.zPos.value = intdiv(z,16)*16;
