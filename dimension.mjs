@@ -1,8 +1,7 @@
 import * as Path from "path";
 import {Region} from "./region.mjs";
 import {intdiv} from "./util.mjs";
-import {MultiMap} from "ds-js
-";
+import {MultiMap} from "ds-js/multimap.mjs";
 
 export class Dimension{
     // flags
