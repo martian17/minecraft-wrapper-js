@@ -74,7 +74,7 @@ export class Region{
 
     // Read mechanisms
     async getChunkBuffer(chunkID){
-        if(!this.new)return null;
+        if(!this.handle)return null;
         if(!this.data_header[chunkID])return null;
         const [offset,size] = this.getHeaderBitfield(chunkID);
         return await this.readChunkBuffer(offset,size);
@@ -110,7 +110,7 @@ export class Region{
             const buffer = await chunk.toBuffer();
             const size = Math.ceil((buffer.byteLength+5)/SECTOR_SIZE);
             // Write to header cache
-            this.date_header[chunkID] = reverseEndian(offset<<8|size);
+            this.data_header[chunkID] = reverseEndian(offset<<8|size);
             this.timestamp_header[chunkID] = timeBE;
             // Write to file
             await this.writeChunkBuffer(offset,buffer);
@@ -176,7 +176,7 @@ export class Region{
                     top.end += size;
                 }
                 // Write to header cache
-                this.date_header[chunkID] = reverseEndian(offset<<8|size);
+                this.data_header[chunkID] = reverseEndian(offset<<8|size);
                 this.timestamp_header[chunkID] = timeBE;
                 // Write to file
                 await this.writeChunkBuffer(offset,buffer);
