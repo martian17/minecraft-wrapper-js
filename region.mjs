@@ -30,6 +30,7 @@ export class Region{
                 throw err;
             }
         }
+        return this;
     }
 
     // File I/O
