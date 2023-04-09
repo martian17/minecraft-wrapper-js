@@ -176,15 +176,15 @@ class BlockEntities{
 };
 
 
-const default_rnbt = await fs.readFile("./chunk-default.rnbt");
-
+let default_rnbt;
 export class Chunk{
-    static fromBuffer(region,id,buffer){
+    static async fromBuffer(region,id,buffer){
         const chunk = new Chunk(region,id);
         return chunk.init(decodeNBT(await inflate(buffer))[""]);
     }
-    static fromEmpty(region,id,x,y){
-        const nbt = decodeRNBT(rnbt_str);
+    static async fromEmpty(region,id,x,y){
+        if(!default_rnbt)default_rnbt = await fs.readFile("./chunk-default.rnbt");
+        const nbt = decodeRNBT(default_rnbt);
         nbt.xPos.value = intdiv(x,16)*16;
         nbt.yPos.value = intdiv(y,16)*16;
         nbt.zPos.value = intdiv(z,16)*16;
