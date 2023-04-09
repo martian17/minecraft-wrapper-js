@@ -1,0 +1,271 @@
+{
+  "": {
+    Data: {
+      WanderingTraderSpawnChance: i32 25,
+      BorderCenterZ: f64 0,
+      Difficulty: i8 3,
+      BorderSizeLerpTime: i64 0,
+      raining: i8 0,
+      Time: i64 8336,
+      GameType: i32 1,
+      ServerBrands: [
+        "vanilla"
+      ],
+      BorderCenterX: f64 0,
+      BorderDamagePerBlock: f64 0.2,
+      BorderWarningBlocks: f64 5,
+      WorldGenSettings: {
+        bonus_chest: i8 0,
+        seed: i64 6161639193786827697,
+        generate_features: i8 0,
+        dimensions: {
+          "minecraft:overworld": {
+            generator: {
+              settings: {
+                features: i8 0,
+                biome: "minecraft:plains",
+                layers: [
+                  {
+                    block: "minecraft:white_concrete",
+                    height: i32 1
+                  }
+                ],
+                structure_overrides: [
+                  "minecraft:strongholds",
+                  "minecraft:villages"
+                ],
+                lakes: i8 0
+              },
+              type: "minecraft:flat"
+            },
+            type: "minecraft:overworld"
+          },
+          "minecraft:the_nether": {
+            generator: {
+              settings: "minecraft:nether",
+              biome_source: {
+                preset: "minecraft:nether",
+                type: "minecraft:multi_noise"
+              },
+              type: "minecraft:noise"
+            },
+            type: "minecraft:the_nether"
+          },
+          "minecraft:the_end": {
+            generator: {
+              settings: "minecraft:end",
+              biome_source: {
+                type: "minecraft:the_end"
+              },
+              type: "minecraft:noise"
+            },
+            type: "minecraft:the_end"
+          }
+        }
+      },
+      DragonFight: {
+        NeedsStateScanning: i8 1,
+        Gateways: [
+          i32 1,
+          i32 17,
+          i32 15,
+          i32 8,
+          i32 6,
+          i32 7,
+          i32 9,
+          i32 16,
+          i32 10,
+          i32 14,
+          i32 12,
+          i32 3,
+          i32 2,
+          i32 4,
+          i32 19,
+          i32 13,
+          i32 5,
+          i32 11,
+          i32 0,
+          i32 18
+        ],
+        DragonKilled: i8 1,
+        PreviouslyKilled: i8 1
+      },
+      BorderSizeLerpTarget: f64 59999968,
+      Version: {
+        Snapshot: i8 0,
+        Series: "main",
+        Id: i32 3337,
+        Name: "1.19.4"
+      },
+      DayTime: i64 0,
+      initialized: i8 1,
+      WasModded: i8 0,
+      allowCommands: i8 1,
+      WanderingTraderSpawnDelay: i32 24000,
+      CustomBossEvents: {},
+      // This section contains the rules like mob spawning
+      // I turned off mob spawning and block updating events to preserve the block states
+      GameRules: {
+        doWardenSpawning: "false",
+        globalSoundEvents: "true",
+        tntExplosionDropDecay: "false",
+        doFireTick: "false",
+        maxCommandChainLength: "65536",
+        doVinesSpread: "true",
+        fireDamage: "true",
+        reducedDebugInfo: "false",
+        waterSourceConversion: "true",
+        disableElytraMovementCheck: "false",
+        lavaSourceConversion: "false",
+        announceAdvancements: "true",
+        drowningDamage: "true",
+        commandBlockOutput: "true",
+        forgiveDeadPlayers: "true",
+        doMobSpawning: "false",
+        maxEntityCramming: "24",
+        disableRaids: "false",
+        doWeatherCycle: "false",
+        mobExplosionDropDecay: "true",
+        doDaylightCycle: "false",
+        showDeathMessages: "true",
+        doTileDrops: "true",
+        universalAnger: "false",
+        playersSleepingPercentage: "100",
+        snowAccumulationHeight: "1",
+        doInsomnia: "false",
+        blockExplosionDropDecay: "true",
+        doImmediateRespawn: "false",
+        naturalRegeneration: "true",
+        doMobLoot: "true",
+        fallDamage: "true",
+        keepInventory: "false",
+        doEntityDrops: "true",
+        doLimitedCrafting: "false",
+        mobGriefing: "true",
+        randomTickSpeed: "0",
+        spawnRadius: "10",
+        commandModificationBlockLimit: "32768",
+        doTraderSpawning: "false",
+        freezeDamage: "true",
+        logAdminCommands: "true",
+        spectatorsGenerateChunks: "true",
+        sendCommandFeedback: "true",
+        doPatrolSpawning: "false"
+      },
+      Player: {
+        Brain: {
+          memories: {}
+        },
+        HurtByTimestamp: i32 0,
+        SleepTimer: i16 0,
+        Attributes: [
+          {
+            Base: f64 0.10000000149011612,
+            Name: "minecraft:generic.movement_speed"
+          }
+        ],
+        Invulnerable: i8 0,
+        FallFlying: i8 0,
+        PortalCooldown: i32 0,
+        AbsorptionAmount: f32 0,
+        abilities: {
+          invulnerable: i8 1,
+          mayfly: i8 1,
+          instabuild: i8 1,
+          walkSpeed: f32 0.10000000149011612,
+          mayBuild: i8 1,
+          flying: i8 0,
+          flySpeed: f32 0.05000000074505806
+        },
+        FallDistance: f32 0,
+        recipeBook: {
+          recipes: [
+            "minecraft:crafting_table",
+            "minecraft:glow_item_frame"
+          ],
+          isBlastingFurnaceFilteringCraftable: i8 0,
+          isSmokerGuiOpen: i8 0,
+          isFilteringCraftable: i8 0,
+          toBeDisplayed: [
+            "minecraft:crafting_table",
+            "minecraft:glow_item_frame"
+          ],
+          isFurnaceGuiOpen: i8 0,
+          isGuiOpen: i8 0,
+          isFurnaceFilteringCraftable: i8 0,
+          isBlastingFurnaceGuiOpen: i8 0,
+          isSmokerFilteringCraftable: i8 0
+        },
+        DeathTime: i16 0,
+        XpSeed: i32 13190619,
+        XpTotal: i32 0,
+        UUID: i32 [-642557513,460145057,-1927120728,-1623052012],
+        playerGameType: i32 1,
+        seenCredits: i8 0,
+        Motion: [
+          f64 0,
+          f64 -0.0784000015258789,
+          f64 0
+        ],
+        Health: f32 20,
+        foodSaturationLevel: f32 5,
+        Air: i16 300,
+        OnGround: i8 1,
+        Dimension: "minecraft:overworld",
+        Rotation: [
+          f32 90.0004653930664,
+          f32 86.99999237060547
+        ],
+        XpLevel: i32 0,
+        warden_spawn_tracker: {
+          warning_level: i32 0,
+          ticks_since_last_warning: i32 8281,
+          cooldown_ticks: i32 0
+        },
+        Score: i32 0,
+        Pos: [
+          f64 0,
+          f64 -63,
+          f64 0
+        ],
+        Fire: i16 -20,
+        XpP: f32 0,
+        EnderItems: [],
+        DataVersion: i32 3337,
+        foodLevel: i32 20,
+        foodExhaustionLevel: f32 0,
+        HurtTime: i16 0,
+        SelectedItemSlot: i32 1,
+        Inventory: [],
+        foodTickTimer: i32 0
+      },
+      SpawnY: i32 -63,
+      rainTime: i32 0,
+      thunderTime: i32 0,
+      SpawnZ: i32 0,
+      hardcore: i8 0,
+      DifficultyLocked: i8 0,
+      SpawnX: i32 0,
+      clearWeatherTime: i32 0,
+      thundering: i8 0,
+      SpawnAngle: f32 0,
+      version: i32 19133,
+      BorderSafeZone: f64 5,
+      LastPlayed: i64 1680052303446,
+      BorderWarningTime: f64 15,
+      ScheduledEvents: [],
+      LevelName: "TEST_EVERY_BLOCKS",
+      BorderSize: f64 59999968,
+      DataVersion: i32 3337,
+      DataPacks: {
+        Disabled: [
+          "bundle",
+          "update_1_20"
+        ],
+        Enabled: [
+          "vanilla"
+        ]
+      }
+    }
+  }
+}
