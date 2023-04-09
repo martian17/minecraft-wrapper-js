@@ -20,7 +20,7 @@ export class Region{
     }
     async init(){
         try{
-            this.handle = await fs.open(this.path,"rb+");
+            this.handle = await fs.open(this.path,"r+");
             await this.loadHeaders();
         }catch(err){
             if(err.code === "ENOENT"){
@@ -100,7 +100,7 @@ export class Region{
     async save_new(){
         // w+ flag creates a file if DNE, which is the case here.
         // w+ behaves the same way as r+ after wards
-        this.handle = fs.open(this.path,"w+");
+        this.handle = await fs.open(this.path,"w+");
         this.data_header = new Int32Array(REGION_SIZE);
         this.timestamp_header = new Int32Array(REGION_SIZE);
         let offset = 2;
