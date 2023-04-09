@@ -190,7 +190,7 @@ export class Chunk{
     }
     static async fromEmpty(region,id,x,z){
         if(!default_rnbt)default_rnbt = ""+await fs.readFile(Path.join(__dirname,"./chunk-default.rnbt"));
-        const nbt = decodeRNBT(default_rnbt);
+        const nbt = decodeRNBT(default_rnbt)[""];
         nbt.xPos.value = intdiv(x,16)*16;
         nbt.zPos.value = intdiv(z,16)*16;
         const chunk = new Chunk(region,id);
@@ -203,7 +203,7 @@ export class Chunk{
     init(nbt){
         this.nbt = nbt;
         this.sections = newarr(nbt.sections.length);
-        this.ymin = this.sections[0].y*16;
+        this.ymin = nbt.yPos.value*16;
         this.blockEntities = new BlockEntities(nbt.block_entities);
         return this;
     }
