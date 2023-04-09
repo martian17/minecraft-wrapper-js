@@ -1,5 +1,5 @@
 import {World} from "../index.mjs";
-import {intdiv,convertEndian} from "../util.mjs";
+import {intdiv,reverseEndian} from "../util.mjs";
 import {newarr} from "ds-js/arrutil.mjs";
 
 const path = process.argv[2];
@@ -43,7 +43,7 @@ for(let z = 0; z < 32; z++){
         size /= 4096;
         if(size !== 1)console.log(size,offset);
 
-        // const chunkmeta = convertEndian(region.i32[id]);
+        // const chunkmeta = reverseEndian(region.i32[id]);
         // const offset_ = (chunkmeta>>>8);
         // const size_ = (chunkmeta&0xff);
         // console.log(size_);
