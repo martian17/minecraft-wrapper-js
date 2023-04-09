@@ -1,0 +1,250 @@
+{
+  "": {
+    DataVersion: i32 3337,
+    Status: "full",
+    xPos: i32 0,
+    yPos: i32 -4,
+    zPos: i32 0,
+    LastUpdate: i64 2,
+    InhabitedTime: i64 0,
+    isLightOn: i8 1,
+    block_entities: [],
+    block_ticks: [],
+    fluid_ticks: [],
+    structures: {
+      References: {},
+      starts: {}
+    },
+    PostProcessing: [
+      [],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]
+    ],
+    Heightmaps: {
+      OCEAN_FLOOR:
+          i64 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      MOTION_BLOCKING_NO_LEAVES:
+          i64 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      MOTION_BLOCKING:
+          i64 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      WORLD_SURFACE:
+          i64 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    sections: [
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 -4
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 -3
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 -2
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 -1
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 0
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 1
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 2
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 3
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 4
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 5
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 6
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 7
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 8
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 9
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 10
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 11
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 12
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 13
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 14
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 15
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 16
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 17
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 18
+      },
+      {
+        block_states: {
+          palette: [ {Name: "minecraft:air"} ]
+        },
+        biomes: {
+          palette: [ "minecraft:plains" ]
+        },
+        Y: i8 19
+      }
+    ]
+  }
+}
