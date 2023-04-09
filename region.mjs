@@ -85,7 +85,7 @@ export class Region{
             return this.chunkCache.get(chunkID);
         let buffer;
         let chunk;
-        if(buffer = await this.getChunkBuffer(chunkID)){
+        if((buffer = await this.getChunkBuffer(chunkID))){
             chunk = await Chunk.fromBuffer(this,chunkID,buffer);
         }else{
             chunk = await Chunk.fromEmpty(this,chunkID,x,z);
