@@ -1,146 +1,195 @@
-import {Chunk} from "./chunk.mjs";
-import {intdiv, convertEndian} from "./util.mjs";
-import {newarr} from "ds-js/arrutil.mjs";
 import {promises as fs} from "fs";
-import {BufferBuilder} from "buffer-builder.js";
-import zlib from "zlib";
+import Path from "path";
+import {Chunk} from "./chunk.mjs";
+import {intdiv, reverseEndian} from "./util.mjs";
+import {MinHeap,MaxHeap} from "ds-js/heap.mjs"
+
+const i32buff = new Int32Array(1);
+const u8buff = new Uint8Array(1);
+
+const SECTOR_SIZE = 4096;
+const REGION_SIZE = 1024;
 
 export class Region{
-    constructor(dimension,path){
+    constructor(dimension,x,z){
+        // x and y are coordinates divided by 512
+        this.path = Path.join(dimension.path,`r.${x}.${z}.mca`);
+        this.x = x;
+        this.z = z;
         this.dimension = dimension;
-        this.path = path;
     }
     async init(){
-        let {path} = this;
-        //throws err when file DNE
-        this.buffer = await fs.readFile(path);
-        this.i32 = new Int32Array(this.buffer.buffer);
-        this.u8 = new Uint8Array(this.buffer.buffer);
-        return this;
-    }
-    getChunkID(x,z){
-        const cx = intdiv(x,16);
-        const cz = intdiv(z,16);
-        return cz*32+cx;
-    }
-    getChunkData(chunkID){
-        const {i32,u8} = this;
-        const chunkmeta = convertEndian(i32[chunkID]);
-        const offset = (chunkmeta>>>8)*4096;
-        const size = (chunkmeta&0xff)*4096;
-        const timestamp = convertEndian(i32[chunkID+1024]);
-        return [offset,size,timestamp];
-    }
-    chunks = new Map;
-    async getChunkBuffer(chunkID){
-        const {chunks,i32,u8} = this;
-        //check if the chunk exists within the buffer
-        if(i32[chunkID] === 0)
-            throw new Error("Chunk does not exist within the region");
-        const [offset,size,timestamp] = this.getChunkData(chunkID);
-        // decompressing the chunk
-        const data_length = convertEndian(i32[offset/4]);
-        const scheme = u8[offset+4];
-        if(scheme !== 2/*zlib*/){
-            throw new Error("Scheme not supported");
+        try{
+            this.handle = await fs.open(this.path,"rb+");
+            await this.loadHeaders();
+        }catch(err){
+            if(err.code === "ENOENT"){
+                if(!this.dimension.allowChunkGeneration)
+                    throw new Error("Region DNE, but Dimension.allowChunkGeneration is set to false.");
+            }else{
+                throw err;
+            }
         }
-        //testing attention please
-        const zlib_data = u8.slice(offset+5,offset+5+data_length-1);
-        //const zlib_data = u8.slice(offset+5,offset+5+data_length);
-        return zlib.inflateSync(zlib_data);
     }
-    async getChunk(x,z){//x and z are relative to this region
-        const {chunks} = this;
-        const chunkID = this.getChunkID(x,z);
-        if(chunks.has(chunkID))return chunks.get(chunkID);
-        const chunk = new Chunk(this,await this.getChunkBuffer(chunkID),chunkID);
-        chunks.set(chunkID,chunk);
+
+    // File I/O
+    handle = null;
+    async writeChunkBuffer(offset,buffer){
+        i32buff[0] = reverseEndian(buffer.byteLength+1);
+        u8buff[0] = 2;
+        await this.handle.write(i32buff,{position:offset*SECTOR_SIZE});
+        await this.handle.write(u8buff,{position:offset*SECTOR_SIZE+4});
+        await this.handle.write(buffer,{position:offset*SECTOR_SIZE+5});
+    }
+    async writeHeaders(){
+        await this.handle.write(this.data_header,{position:0});
+        await this.handle.write(this.timestamp_header,{position:SECTOR_SIZE*1});
+    }
+    async readChunkBuffer(offset,size){
+        const buffer = Buffer.allocUnsafe(size*SECTOR_SIZE);
+        await this.handle.read(buffer, offset, 0, offset*SECTOR_SIZE, size*SECTOR_SIZE);
+        const data_length = buffer[0]<<24|buffer[1]<<16|buffer[2]<<8|buffer[3];
+        const scheme = buffer[4];
+        if(scheme !== 2/*zlib*/)
+            throw new Error("Scheme not supported");
+        return await buffer.subarray(5,5+data_length-1);
+    }
+    async loadHeaders(){
+        this.data_header = new Int32Array(SECTOR_SIZE);
+        this.timestamp_header = new Int32Array(SECTOR_SIZE);
+        await this.handle.read(this.data_header,0,SECTOR_SIZE,0);
+        await this.handle.read(this.timestamp_header,0,SECTOR_SIZE,SECTOR_SIZE*1);
+    }
+
+    // Misc utils
+    newChunkBucket = [];
+    chunkCache = new Map;
+    getHeaderBitfield(chunkID){
+        const header_bitfield = reverseEndian(this.data_header[chunkID]);
+        const offset = header_bitfield>>>8;
+        const size   = header_bitfield&0xff;
+        return [offset,size];
+    }
+
+    // Read mechanisms
+    async getChunkBuffer(chunkID){
+        if(!this.new)return null;
+        if(!this.data_header[chunkID])return null;
+        const [offset,size] = this.getHeaderBitfield(chunkID);
+        return await this.readChunkBuffer(offset,size);
+    }
+    async getChunk(x,z){
+        // x y are based on region origin
+        const chunkID = intdiv(z%512,16)*32+intdiv(x%512,16);
+        if(this.chunkCache.has(chunkID))
+            return this.chunkCache.get(chunkID);
+        let buffer;
+        let chunk;
+        if(buffer = await this.getChunkBuffer(chunkID)){
+            chunk = await Chunk.fromBuffer(this,chunkID,buffer);
+        }else{
+            chunk = await Chunk.fromEmpty(this,chunkID,x,z);
+            this.newChunkBucket.push(chunk);
+        }
+        this.chunkCache.set(chunkID,chunk);
         return chunk;
     }
-    async save(){
-        let compressedChunks = [];
-        let inPlace = true;//use fseek()
-        for(let [id,chunk] of this.chunks){
-            if(!chunk.modified){
-                continue;
-            }
-            let buff = chunk.toBuffer();
-            let compressed = zlib.deflateSync(buff);
-            const [offset,sectorSize] = this.getChunkData(chunk.id);
-            const size = compressed.byteLength+5;
-            if(size > sectorSize){
-                inPlace = false;
-            }
-            compressedChunks.push([offset,id,compressed]);
-        }
-        if(inPlace){
-            const file = await fs.open(this.path,"r+");
-            for(let [offset,id,compressed] of compressedChunks){
-                await this.saveChunkInPlace(file,compressed,offset);
-            }
-            await file.close();
-        }else{
-            //rewrite the entire file
-            await this.saveGroundUp(compressedChunks);
-        }
-    }
-    async saveGroundUp(compressedChunks){
-        const {i32} = this;
-        let chunkmap = newarr(1024);
-        const MODIFIED = 0;
-        const ORIGINAL = 1;
-        const buff = new BufferBuilder(this.buffer.byteLength,8192);
+
+
+    // Save mechanisms
+    async save_new(){
+        // w+ flag creates a file if DNE, which is the case here.
+        // w+ behaves the same way as r+ after wards
+        this.handle = fs.open(this.path,"w+");
+        this.data_header = new Int32Array(REGION_SIZE);
+        this.timestamp_header = new Int32Array(REGION_SIZE);
         let offset = 2;
-        for(let [_,id,compressed] of compressedChunks){
-            const timestamp = (Date.now()/1000)|0;
-            const size = Math.ceil((compressed.byteLength+5)/4096);
-            const chunkmeta = (offset<<8)|size;
-            buff.set_I32BE_aligned(chunkmeta,id);
-            buff.set_I32BE_aligned(timestamp,id+1024);
-            const writtenSize = compressed.byteLength+1; 
-            buff.set_I32BE_aligned(writtenSize,offset*1024);
-            buff.set_U8(2,offset*4096+4);
-            buff.set_buffer(compressed,offset*4096+5);
-            offset += size;
-            chunkmap[id] = 1;
-        }
-        for(let id = 0; id < 1024; id++){
-            if(chunkmap[id])continue;
-            if(i32[id] === 0)continue;
-            const timestamp = i32[id+1024];
-            const [offset_bytes,size_bytes] = this.getChunkData(id);
-            const size = size_bytes/4096;
-            const chunkmeta = (offset<<8)|size;
-            buff.set_I32BE_aligned(chunkmeta,id);
-            buff.set_I32BE_aligned(timestamp,id+1024);
-            buff.set_buffer(
-                this.buffer.slice(
-                    offset_bytes,
-                    offset_bytes+size_bytes
-                ),
-                offset*4096
-            );
+        const timeBE = reverseEndian(Date.now());
+        for(let [chunkID,chunk] of this.chunkCache){
+            const buffer = await chunk.toBuffer();
+            const size = Math.ceil((buffer.byteLength+5)/SECTOR_SIZE);
+            // Write to header cache
+            this.date_header[chunkID] = reverseEndian(offset<<8|size);
+            this.timestamp_header[chunkID] = timeBE;
+            // Write to file
+            await this.writeChunkBuffer(offset,buffer);
             offset += size;
         }
-        const totalSize = offset*4096;
-        //fill the rest with 0
-        if(buff.length < totalSize)
-            buff.set_U8(totalSize-1,0);
-        await fs.writeFile(this.path,buff.export());
+        await this.writeHeaders();
     }
-    async saveChunkInPlace(fileHandle,compressed,offset){
-        //write with fseek
-        //why length include encoding format but not itself???
-        const size = compressed.byteLength+1;
-        //why big endian　\(ToT)/
-        //uncomment this in production
-        await fileHandle.write(new Uint8Array([
-            size>>>24,
-            size>>>16,
-            size>>>8,
-            size,
-            2
-        ]),0,5,offset);
-        await fileHandle.write(compressed,0,compressed.byteLength,offset+5);
+
+    async save_update(){
+        // Step1. Compress modified chunks and remove it from header 
+        const queuedBuffers = new MaxHeap();
+        for(let [chunkID,chunk] of this.chunkCache){
+            if(!chunk.modified)continue;
+            chunk.modified = false;
+            
+            const buffer = await chunk.toBuffer();
+            queuedBuffers.add(buffer.byteLength,[chunkID,buffer]);
+            this.data_header[chunkID] = 0;
+        }
+        for(let chunk of this.newChunkBucket){
+            const buffer = await chunk.toBuffer();
+            chunk.modified = false;
+            queuedBuffers.add(buffer.byteLength,[chunk.id,buffer]);
+        }
+        this.newChunkBucket = [];
+
+        // Step 2. Construct linked list of existing allocations
+        const chunks = new MinHeap;
+        for(let chunkID = 0; chunkID < REGION_SIZE; chunkID++){
+            if(this.data_header[chunkID] === 0)continue;
+            const [offset,size] = this.getHeaderBitfield(chunkID);
+            chunks.add(offset,[offset,offset+size]);
+        }
+        const allocations = {start:2,end:2,prev:null,next:null};
+        let top = allocations;
+        while(!chunks.isEmpty()){
+            const [start,end] = chunks.pop();
+            if(start-top.end > 0){
+                const old_top = top;
+                top = {start,end,prev:old_top,next:null};
+                old_top.next = top;
+            }else{
+                top.end = end;
+            }
+        }
+        
+        // Step 3. Get compressed chunks from the queue, look for vacant spaces, and save them.
+        const timeBE = reverseEndian(Date.now());
+        while(!queuedBuffers.isEmpty()){
+            const [chunkID,buffer] = queuedBuffers.pop();
+            const size = Math.ceil((buffer.byteLength+5)/SECTOR_SIZE);
+            for(let top = allocations; top !== null; top = top.next){
+                const offset = top.end;
+                const end = top.next === null ? Infinity : top.next.start;
+                const available = end-offset;
+                if(size > available)continue;
+                if(size === available){
+                    // merge top and top.next
+                    top.end = top.next.end;
+                    top.next = top.next.next;
+                    top.next.prev = top;
+                }else{
+                    top.end += size;
+                }
+                // Write to header cache
+                this.date_header[chunkID] = reverseEndian(offset<<8|size);
+                this.timestamp_header[chunkID] = timeBE;
+                // Write to file
+                await this.writeChunkBuffer(offset,buffer);
+                break;
+            }
+        }
+        await this.writeHeaders();
     }
-};
+
+    async save(){
+        if(this.handle){
+            await this.save_update();
+        }else{
+            await this.save_new();
+        }
+    }
+}
