@@ -211,7 +211,7 @@ export class Chunk{
     getSection(y){
         const y0 = y-this.ymin;
         const sidx = Math.floor(y0/16);
-        if(!this.sections[sidx])
+        if(this.sections[sidx])
             return this.sections[sidx];
         return this.sections[sidx] = new Section(this.nbt.sections[sidx]);
     }
