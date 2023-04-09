@@ -14,5 +14,8 @@
     "ds-js": "github:martian17/ds-js",
     "nbt.js": "github:martian17/nbt.js",
     "obj-schema-validator": "github:martian17/obj-schema-validator"
+  },
+  "devDependencies": {
+    "eslint": "^8.38.0"
   }
 }
