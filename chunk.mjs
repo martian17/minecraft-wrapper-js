@@ -21,6 +21,7 @@ const decodeBlockStates = function(block_states = {palette:["DNE"]}){
             console.log(palette);
             throw new Error("only palette present. expected exactly one content");
         }
+        // eslint-disable-next-line
         return newarr(4096).map(_=>palette[0]);
     }
     let bitDepth = Math.ceil(Math.log(palette.length)/Math.log(2));
