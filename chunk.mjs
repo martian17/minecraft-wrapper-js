@@ -185,11 +185,10 @@ export class Chunk{
         const chunk = new Chunk(region,id);
         return chunk.init(decodeNBT(await inflate(buffer))[""]);
     }
-    static async fromEmpty(region,id,x,y){
+    static async fromEmpty(region,id,x,z){
         if(!default_rnbt)default_rnbt = await fs.readFile("./chunk-default.rnbt");
         const nbt = decodeRNBT(default_rnbt);
         nbt.xPos.value = intdiv(x,16)*16;
-        nbt.yPos.value = intdiv(y,16)*16;
         nbt.zPos.value = intdiv(z,16)*16;
         const chunk = new Chunk(region,id);
         return chunk.init(nbt);
