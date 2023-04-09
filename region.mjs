@@ -89,6 +89,8 @@ export class Region{
         if((buffer = await this.getChunkBuffer(chunkID))){
             chunk = await Chunk.fromBuffer(this,chunkID,buffer);
         }else{
+            if(!this.dimension.allowChunkGeneration)
+                throw new Error("Chunk DNE, but Dimension.allowChunkGeneration is set to false.");
             chunk = await Chunk.fromEmpty(this,chunkID,x,z);
             this.newChunkBucket.push(chunk);
         }
