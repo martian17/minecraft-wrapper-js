@@ -13,8 +13,8 @@ export class Dimension{
     }
     regions = new MultiMap;
     async getRegion(x,z){
-        const rx = x%512;
-        const rz = z%512;
+        const rx = intdiv(x,512);
+        const rz = intdiv(z,512);
         let region;
         if(region = this.regions.get(rx,rz)){
             return region;
@@ -36,7 +36,7 @@ export class Dimension{
         return await chunk.setBlock(x%16,y,z%16,data,entity);
     }
     async save(){
-        for(let [_,region] of this.regions){
+        for(let [_rx,_rz,region] of this.regions){
             await region.save();
         }
     }
