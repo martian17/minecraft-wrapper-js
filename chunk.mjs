@@ -1,8 +1,15 @@
 import {decodeNBT,encodeNBT,NBT_Int,NBT_Byte} from "nbt.js";
+import {decodeRNBT} from "rnbt";
 import {newarr} from "ds-js/arrutil.mjs";
 import {MultiMap} from "ds-js/multimap.mjs";
 import {normalizeObject} from "ds-js/objutil.mjs";
 import {unpackArray_64BEA, PackedArray_64BEA_Builder} from "./packedArray64BEA.mjs";
+import {packedArrayI8_4_get, packedArrayI8_4_set} from "./packedArray8.mjs";
+import util from "util";
+import zlib from "zlib";
+
+const inflate = util.promisify(zlib.inflate);
+const deflate = util.promisify(zlib.deflate);
 
 const decodeBlockStates = function(block_states = {palette:["DNE"]}){
     if(!("palette" in block_states)){
@@ -169,17 +176,34 @@ class BlockEntities{
 };
 
 
+const default_rnbt = await fs.readFile("./chunk-default.rnbt");
+
 export class Chunk{
-    constructor(region,nbt_buffer,id){
+    static fromBuffer(region,id,buffer){
+        const chunk = new Chunk(region,id);
+        return chunk.init(decodeNBT(await inflate(buffer))[""]);
+    }
+    static fromEmpty(region,id,x,y){
+        const nbt = decodeRNBT(rnbt_str);
+        nbt.xPos.value = intdiv(x,16)*16;
+        nbt.yPos.value = intdiv(y,16)*16;
+        nbt.zPos.value = intdiv(z,16)*16;
+        const chunk = new Chunk(region,id);
+        return chunk.init(nbt);
+    }
+    constructor(region,id){
         this.region = region;
         this.id = id;
-        const nbt = this.nbt = decodeNBT(nbt_buffer)[""];
-        //ignore the heightmap for now
+    }
+    init(nbt){
+        this.nbt = nbt;
         this.sections = newarr(nbt.sections.length);
         this.ymin = this.sections[0].y*16;
         this.blockEntities = new BlockEntities(nbt.block_entities);
+        return this;
     }
-    getSection(x,y,z){
+
+    getSection(y){
         const y0 = y-this.ymin;
         const sidx = Math.floor(y0/16);
         if(!this.sections[sidx])
@@ -187,13 +211,13 @@ export class Chunk{
         return this.sections[sidx] = new Section(this.nbt.sections[sidx]);
     }
     getBlock(x,y,z){
-        return this.getSection(x,y,z).
+        return this.getSection(y).
             getBlock(x,(y-this.ymin)%16,z);
     }
     modified = false;
     setBlock(x,y,z,data,entity){
         this.modified = true;
-        this.getSection(x,y,z).
+        this.getSection(y).
             setBlock(x,(y-this.ymin)%16,z,data);
         if(entity){
             this.blockEntities.set(x,y,z,entity);
@@ -201,11 +225,7 @@ export class Chunk{
             this.blockEntities.delete(x,y,z);
         }
     }
-    getBlockID(x,y,z){
-    }
-    setBlockID(x,y,z,id){
-    }
-    toBuffer(){
+    async toBuffer(){
         const {nbt} = this;
         const nbtSections = [];
         for(let i = 0; i < this.sections.length; i++){
@@ -220,6 +240,6 @@ export class Chunk{
         }
         nbt.sections = nbtSections;
         nbt.block_entities = this.blockEntities.toNBT();
-        return encodeNBT({"":nbt});
+        return await deflate(encodeNBT({"":nbt}));
     }
 };
