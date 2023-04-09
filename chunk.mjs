@@ -23,7 +23,6 @@ const decodeBlockStates = function(block_states = {palette:["DNE"]}){
             console.log(palette);
             throw new Error("only palette present. expected exactly one content");
         }
-        // eslint-disable-next-line
         return newarr(4096).map(_=>palette[0]);
     }
     let bitDepth = Math.ceil(Math.log(palette.length)/Math.log(2));
@@ -132,7 +131,7 @@ class Section{
         nbt.block_states = encodeBlockState(this.blockArr);
         return nbt;
     }
-};
+}
 
 class BlockEntities{
     entities = new MultiMap;
@@ -158,7 +157,7 @@ class BlockEntities{
         entity.x = new NBT_Int(x);
         entity.y = new NBT_Int(y);
         entity.z = new NBT_Int(z);
-        if(!"id" in props)throw new Error("id is required in block entity");
+        if(!("id" in props))throw new Error("id is required in block entity");
         entity.id = props.id;
         for(let prop in props){
             if(prop in entity) continue;
@@ -171,12 +170,12 @@ class BlockEntities{
     }
     toNBT(){
         const res = [];
-        for(let [x,y,z,entity] of this.entities){
+        for(let [_x,_y,_z,entity] of this.entities){
             res.push(entity);
         }
         return res;
     }
-};
+}
 
 
 let default_rnbt;
@@ -219,7 +218,7 @@ export class Chunk{
     modified = false;
     setBlock(x,y,z,data,entity){
         this.modified = true;
-        this.getSection(y);
+        this.getSection(y).
             setBlock(x,(y-this.ymin)%16,z,data);
         if(entity){
             this.blockEntities.set(x,y,z,entity);
@@ -244,4 +243,4 @@ export class Chunk{
         nbt.block_entities = this.blockEntities.toNBT();
         return await deflate(encodeNBT({"":nbt}));
     }
-};
+}
