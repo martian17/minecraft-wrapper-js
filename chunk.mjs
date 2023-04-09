@@ -111,13 +111,13 @@ class Section{
     //todo: test these methods
     //non iterative base methods
     getBlockLight(x,y,z){
-        return packedArrayI8_4_set(this.nbt.BlockLight,y*256+z*16+x);
+        return packedArrayI8_4_get(this.nbt.BlockLight,y*256+z*16+x);
     }
     setBlockLight(x,y,z,value){
         packedArrayI8_4_set(this.nbt.BlockLight,y*256+z*16+x,value);
     }
     getSkyLight(x,y,z){
-        return packedArrayI8_4_set(this.nbt.SkyLight,y*256+z*16+x);
+        return packedArrayI8_4_get(this.nbt.SkyLight,y*256+z*16+x);
     }
     setSkyLight(x,y,z,value){
         packedArrayI8_4_set(this.nbt.SkyLight,y*256+z*16+x,value);
@@ -217,7 +217,7 @@ export class Chunk{
     modified = false;
     setBlock(x,y,z,data,entity){
         this.modified = true;
-        this.getSection(y).
+        this.getSection(y);
             setBlock(x,(y-this.ymin)%16,z,data);
         if(entity){
             this.blockEntities.set(x,y,z,entity);
