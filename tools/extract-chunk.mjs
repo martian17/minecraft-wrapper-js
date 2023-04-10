@@ -1,32 +1,37 @@
-// extract chunk nbt as binary for use testing in nbt.mjs
+// Extract chunk nbt as binary for use testing in nbt.mjs
 
-import {Dimension} from "../dimension.mjs";
+import {World} from "../index.mjs";
 import {execSync} from "child_process";
 import {normalizeObject} from "ds-js/objutil.mjs";
 import {promises as fs} from "fs";
+import chalk from "chalk";
+import util from "util";
+import zlib from "zlib";
+const inflate = util.promisify(zlib.inflate);
 
-//prepare ./temp
-execSync(`
-rm -rf ./temp
-mkdir temp
-cp ./testdata/r.0.0.mca ./temp/
-`.trim());
+import * as readline from 'node:readline/promises';
+import { stdin as input, stdout as output } from 'node:process';
+const rl = readline.createInterface({ input, output });
 
-const overworld = new Dimension("./temp"); 
+const savedir = process.argv[2];
+const outfile = process.argv[3];
 
-const region = await overworld.getRegion(8,9);
-console.log(`getting chunk data from region ${region.path}.`);
-const chunkID = region.getChunkID(8,9);
-console.log(`chunkID: ${chunkID}`);
-const [offset,size,timestamp] = region.getChunkData(chunkID);
-console.log(`offset: ${offset}
-sector size (mul 4096): ${size/4096}
-sector size (in bytes): ${size}
-sector timestamp: ${timestamp}`);
-const chunkbuff = await region.getChunkBuffer(chunkID);
-console.log(`chunk buffer size: ${chunkbuff.length}`);
-console.log(chunkbuff);
+if(!savedir || !outfile){
+    console.log("Please provide an input save path and output file path.");
+    process.exit();
+}
 
-await fs.writeFile("./testdata/out.nbt",chunkbuff);
-console.log("Chunk NBT extraction completed. Result is stored in ./testdata/out.nbt");
+// Get chunk buffer without calling decodeNBT
+const world = new World(savedir);
+const dim = world.overworld;
+const region = await dim.getRegion(0,0);
+const NBT_Buffer = await inflate(await region.getChunkBuffer(0));
 
+console.log("Extracted buffer:",NBT_Buffer);
+
+const yn = await rl.question(`Extracted a chunk at [x=0, z=0] as a binary buffer from ${chalk.yellow(savedir)}. Do you want to write it to ${chalk.yellow(outfile)}? [y/N]: `);
+if(yn.trim().toLowerCase() !== "y")process.exit();
+await fs.writeFile(outfile,NBT_Buffer);
+console.log(`Chunk NBT extraction completed. Result is stored in ${chalk.yellow(outfile)}`);
+
+process.exit();
