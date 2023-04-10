@@ -97,7 +97,8 @@
         Id: i32 3337,
         Name: "1.19.4"
       },
-      DayTime: i64 0,
+      // Mid day
+      DayTime: i64 6000,
       initialized: i8 1,
       WasModded: i8 0,
       allowCommands: i8 1,
