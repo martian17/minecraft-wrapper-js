@@ -129,13 +129,13 @@ export class Region{
             chunk.modified = false;
             
             const buffer = await chunk.toBuffer();
-            queuedBuffers.add(buffer.byteLength,[chunkID,buffer]);
+            queuedBuffers.add([chunkID,buffer],buffer.byteLength);
             this.data_header[chunkID] = 0;
         }
         for(let chunk of this.newChunkBucket){
             const buffer = await chunk.toBuffer();
             chunk.modified = false;
-            queuedBuffers.add(buffer.byteLength,[chunk.id,buffer]);
+            queuedBuffers.add([chunk.id,buffer],buffer.byteLength);
         }
         this.newChunkBucket = [];
 
@@ -144,7 +144,7 @@ export class Region{
         for(let chunkID = 0; chunkID < REGION_SIZE; chunkID++){
             if(this.data_header[chunkID] === 0)continue;
             const [offset,size] = this.getHeaderBitfield(chunkID);
-            chunks.add(offset,[offset,offset+size]);
+            chunks.add([offset,offset+size],offset);
         }
         const allocations = {start:2,end:2,prev:null,next:null};
         let top = allocations;
