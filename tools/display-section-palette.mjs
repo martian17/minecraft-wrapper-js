@@ -1,14 +1,14 @@
 import {World} from "../index.mjs";
 
-const path = process.argv[2];
+const savedir = process.argv[2];
 const [x=0,y=-64,z=0] = process.argv.slice(3).map(v=>parseInt(v));
 
-if(!path){
+if(!savedir){
     console.log("please specify a path to the save data");
     process.exit();
 }
 
-const world = new World(path);
+const world = new World(savedir);
 const dim = world.overworld;
 
 console.log(`Getting the section at x=${x} y=${y} z=${z}`);

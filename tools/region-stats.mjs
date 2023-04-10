@@ -3,15 +3,15 @@ import {intdiv,reverseEndian} from "../util.mjs";
 import {newarr} from "ds-js/arrutil.mjs";
 import chalk from "chalk";
 
-const path = process.argv[2];
+const savedir = process.argv[2];
 const [x=0,y=0,z=0] = process.argv.slice(3).map(v=>parseInt(v));
 
-if(!path){
+if(!savedir){
     console.log("please specify a path to the save data");
     process.exit();
 }
 
-const world = new World(path);
+const world = new World(savedir);
 const dim = world.overworld;
 
 const region = await dim.getRegion(x,z);
