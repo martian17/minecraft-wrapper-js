@@ -15,14 +15,15 @@ const objEqual = function(obj1,obj2){
 
 //prepare a test data
 execSync(`
-rm -rf ./temp/*
+rm -rf ./temp
+mkdir ./temp
 mkdir ./temp/original
 mkdir ./temp/modified
 cp ./testdata/r.0.0.mca ./temp/original/
 cp ./testdata/r.0.0.mca ./temp/modified/
 `.trim());
 
-const dim1 = new Dimension("./temp/modified");
+const dim1 = new Dimension({},"./temp/modified");
 console.log("loaded dim1");
 //read all blocks from the initial chunk, and set it as that block
 for(let x = 0; x < 16; x++){
@@ -38,8 +39,8 @@ await dim1.save();
 console.log("saved the dim1");
 
 
-const dim0 = new Dimension("./temp/original");
-const dim2 = new Dimension("./temp/modified");
+const dim0 = new Dimension({},"./temp/original");
+const dim2 = new Dimension({},"./temp/modified");
 console.log("loaded dim0 and dim2");
 const success = true;
 for(let x = 0; x < 16; x++){
