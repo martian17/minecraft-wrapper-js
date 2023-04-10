@@ -3,6 +3,18 @@ import {Dimension} from "../dimension.mjs";
 import {execSync} from "child_process";
 import {normalizeObject} from "ds-js/objutil.mjs";
 
+import Path from "path";
+import os from "os";
+const tmpdir = Path.join(os.tmpdir(),"slimejs");
+
+import * as url from 'url';
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+
+const originaldir = Path.join(tmpdir,"original");
+const modifieddir = Path.join(tmpdir,"modified");
+const fixtures = Path.join(__dirname,"fixtures");
+
+
 const normalizeStringify = function(obj){
     return JSON.stringify(normalizeObject(obj));
 }
@@ -15,15 +27,15 @@ const objEqual = function(obj1,obj2){
 
 //prepare a test data
 execSync(`
-rm -rf ./temp
-mkdir ./temp
-mkdir ./temp/original
-mkdir ./temp/modified
-cp ./testdata/r.0.0.mca ./temp/original/
-cp ./testdata/r.0.0.mca ./temp/modified/
+rm -rf ${tmpdir}
+mkdir ${tmpdir}
+mkdir ${originaldir}
+mkdir ${modifieddir}
+cp ${Path.join(fixtures,"r.0.0.mca")} ${originaldir}
+cp ${Path.join(fixtures,"r.0.0.mca")} ${modifieddir}
 `.trim());
 
-const dim1 = new Dimension({},"./temp/modified");
+const dim1 = new Dimension({},modifieddir);
 console.log("loaded dim1");
 //read all blocks from the initial chunk, and set it as that block
 for(let x = 0; x < 16; x++){
@@ -39,8 +51,8 @@ await dim1.save();
 console.log("saved the dim1");
 
 
-const dim0 = new Dimension({},"./temp/original");
-const dim2 = new Dimension({},"./temp/modified");
+const dim0 = new Dimension({},originaldir);
+const dim2 = new Dimension({},modifieddir);
 console.log("loaded dim0 and dim2");
 const success = true;
 for(let x = 0; x < 16; x++){
