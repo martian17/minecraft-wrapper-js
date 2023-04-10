@@ -173,7 +173,7 @@ export class Region{
                     // merge top and top.next
                     top.end = top.next.end;
                     top.next = top.next.next;
-                    top.next.prev = top;
+                    if(top.next !== null)top.next.prev = top;
                 }else{
                     top.end += size;
                 }
