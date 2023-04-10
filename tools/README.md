@@ -1,6 +1,6 @@
 # Slime.js development tools
 
-## region-stats.mjs SAVE\_DIR [x(=0) [y(=-64) [z(=0)]]]
+## region-stats.mjs SAVE\_DIR|REGION\_FILE [x(=0) [y(=-64) [z(=0)]]]
 Show internal sector allocation of a region file at the speficied coordinates
 
 ## get-block.mjs SAVE\_DIR [x(=0) [y(=-64) [z(=0)]]]

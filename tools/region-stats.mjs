@@ -1,7 +1,9 @@
 import {World} from "../index.mjs";
+import {Region} from "../region.mjs";
 import {intdiv,reverseEndian} from "../util.mjs";
 import {newarr} from "ds-js/arrutil.mjs";
 import chalk from "chalk";
+import Path from "path";
 
 const savedir = process.argv[2];
 const [x=0,y=0,z=0] = process.argv.slice(3).map(v=>parseInt(v));
@@ -11,10 +13,19 @@ if(!savedir){
     process.exit();
 }
 
-const world = new World(savedir);
-const dim = world.overworld;
 
-const region = await dim.getRegion(x,z);
+const path = Path.parse(savedir);
+let region;
+if(path.ext === ".mca"){
+    console.log(path);
+    //Extract x and z from file path
+    const [x,z] = path.name.slice(2).split(".").map(v=>parseInt(v));
+    region = await new Region({path:path.dir},x,z).init();
+}else{
+    const world = new World(savedir);
+    const dim = world.overworld;
+    region = await dim.getRegion(x,z);
+}
 
 const {data_header} = region;
 
