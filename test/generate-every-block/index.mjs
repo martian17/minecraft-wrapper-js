@@ -19,6 +19,18 @@ const gunzip = util.promisify(zlib.gunzip);
 const gzip = util.promisify(zlib.gzip);
 
 
+import {exec as exec_base} from "child_process";
+const exec = util.promisify(exec_base);
+
+
+import McVersions from "./mc-versions.mjs";
+
+
+import * as url from 'url';
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+const tmpdir = Path.join(__dirname,"tmp");
+
+
 
 console.log("Creating a test world");
 let defaultMcDir;
@@ -79,6 +91,37 @@ await fs.writeFile(Path.join(worldPath,"level.dat"),await gzip(encodeNBT(level))
 
 console.log("World config complete");
 
+
+
+console.log("");
+let version;
+while(true){
+    version = await rl.question(`Please select the minecraft version to extract blocks from [default=empty: ${McVersions.latest} (latest)]: `);
+    if(version === "")version = McVersions.latest;
+    if(!McVersions.exists(version)){
+        console.log("Error: Please give a valid minecraft version");
+        continue;
+    }
+    break;
+}
+console.log(`Extracting block data from ${version}`);
+
+const jarBuffer = await McVersions.getClientJar(version);
+await exec(`
+rm -rf ${tmpdir}
+mkdir ${tmpdir}
+`);
+await fs.writeFile(Path.join(tmpdir,"client.jar"),jarBuffer);
+await exec(`
+cd ${tmpdir}
+unzip -qq client.jar -d ./client
+`);
+let states = await fs.readdir(Path.join(tmpdir,"client/assets/minecraft/blockstates"));
+states = states.filter(v=>v.slice(-5) === ".json").map(v=>v.slice(0,-5));
+
+console.log("\nBlock ID extraction complete");
+
+
 const regionPath = Path.join(worldPath,"region");
 await fs.mkdir(regionPath);
 //await fs.mkdir(Path.join(worldPath,"DIM-1"));
@@ -87,14 +130,23 @@ await fs.mkdir(regionPath);
 const world = new World(worldPath);
 const dim = world.overworld;
 dim.allowChunkGeneration = true;
-for(let x = 0; x < 16; x++){
-    for(let z = 0; z < 16; z++){
+for(let x = 0; x < Math.ceil(states.length/21*3/16)*16; x++){
+    for(let z = 0; z < Math.ceil(21*3/16)*16; z++){
         await dim.setBlock(x,-64,z,{Name:"minecraft:deepslate"});
     }
 }
+console.log("Placing every blocks found in the given version");
+for(let i = 0; i < states.length; i++){
+    const bname = states[i];
+    const z = (i%21)*3;
+    const x = Math.floor(i/21)*3;
+    await dim.setBlock(x,-63,z,{Name:`minecraft:${bname}`});
+}
+console.log("Block placement complete");
+
 await dim.save();
 
-console.log("Set block complete");
+console.log(`World saved. Now open ${worldName} in your minecraft client.`);
 
 
 process.exit();
