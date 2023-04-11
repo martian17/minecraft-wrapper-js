@@ -26,9 +26,8 @@ const exec = util.promisify(exec_base);
 import McVersions from "./mc-versions.mjs";
 
 
-import * as url from 'url';
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
-const tmpdir = Path.join(__dirname,"tmp");
+import os from "os";
+const tmpdir = Path.join(os.tmpdir(),"slimejs");
 
 
 
