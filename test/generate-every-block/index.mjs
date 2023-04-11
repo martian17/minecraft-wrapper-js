@@ -1,4 +1,4 @@
-import {World} from "../../index.mjs";
+import {World} from "../../lib/index.mjs";
 import {promises as fs} from "fs";
 import {execSync} from "child_process";
 import {encodeRNBT, decodeRNBT} from "rnbt";

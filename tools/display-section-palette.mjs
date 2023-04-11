@@ -1,4 +1,4 @@
-import {World} from "../index.mjs";
+import {World} from "../lib/index.mjs";
 
 const savedir = process.argv[2];
 const [x=0,y=-64,z=0] = process.argv.slice(3).map(v=>parseInt(v));

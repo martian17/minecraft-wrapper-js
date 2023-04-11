@@ -1,4 +1,4 @@
-import {packedArrayI8_4_get, packedArrayI8_4_set} from "../packedArray8.mjs";
+import {packedArrayI8_4_get, packedArrayI8_4_set} from "../lib/packedArray8.mjs";
 
 const a = new Uint8Array([0x98,0x3a]);
 const b = new Int8Array(a.buffer);

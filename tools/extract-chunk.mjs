@@ -1,6 +1,6 @@
 // Extract chunk nbt as binary for use testing in nbt.mjs
 
-import {World} from "../index.mjs";
+import {World} from "../lib/index.mjs";
 import {execSync} from "child_process";
 import {normalizeObject} from "ds-js/objutil.mjs";
 import {promises as fs} from "fs";

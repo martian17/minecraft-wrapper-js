@@ -1,5 +1,4 @@
-//import {World} from "../index.mjs";
-import {Dimension} from "../dimension.mjs";
+import {Dimension} from "../lib/dimension.mjs";
 import {execSync} from "child_process";
 import {normalizeObject} from "ds-js/objutil.mjs";
 
