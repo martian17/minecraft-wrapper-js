@@ -51,8 +51,10 @@ export class Region{
         await this.handle.read(buffer, 0, size*SECTOR_SIZE, offset*SECTOR_SIZE);
         const data_length = buffer[0]<<24|buffer[1]<<16|buffer[2]<<8|buffer[3];
         const scheme = buffer[4];
-        if(scheme !== 2/*zlib*/)
+        if(scheme !== 2/*zlib*/){
+            console.log(offset,size);
             throw new Error("Scheme not supported");
+        }
         return await buffer.subarray(5,5+data_length-1);
     }
     async loadHeaders(){
