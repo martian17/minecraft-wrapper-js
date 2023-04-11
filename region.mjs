@@ -58,8 +58,8 @@ export class Region{
         return await buffer.subarray(5,5+data_length-1);
     }
     async loadHeaders(){
-        this.data_header = new Int32Array(SECTOR_SIZE);
-        this.timestamp_header = new Int32Array(SECTOR_SIZE);
+        this.data_header = new Int32Array(REGION_SIZE);
+        this.timestamp_header = new Int32Array(REGION_SIZE);
         await this.handle.read(this.data_header,0,SECTOR_SIZE,0);
         await this.handle.read(this.timestamp_header,0,SECTOR_SIZE,SECTOR_SIZE*1);
     }
