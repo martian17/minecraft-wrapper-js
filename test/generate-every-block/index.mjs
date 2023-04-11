@@ -19,6 +19,8 @@ const gunzip = util.promisify(zlib.gunzip);
 const gzip = util.promisify(zlib.gzip);
 
 
+import * as url from 'url';
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 import {exec as exec_base} from "child_process";
 const exec = util.promisify(exec_base);
 
@@ -81,7 +83,7 @@ if(exists){
 
 await fs.mkdir(worldPath);
 
-const level = decodeRNBT(""+await fs.readFile("./level.rnbt"));
+const level = decodeRNBT(""+await fs.readFile(Path.join(__dirname,"./level.rnbt")));
 
 level[""].Data.LevelName = worldName;
 level[""].Data.LastPlayed = new NBT_Long(BigInt(Date.now()));
