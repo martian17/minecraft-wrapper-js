@@ -18,6 +18,10 @@ await dim.setBlock(3,-60,0,{Name:"minecraft:water"});
 
 
 console.log(await dim.getBlock(0,-60,0));
+console.log(await dim.getBlock(1,-60,0));
+console.log(await dim.getBlock(2,-60,0));
+console.log(await dim.getBlock(3,-60,0));
+
 
 console.log("saving");
 await dim.save();
