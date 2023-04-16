@@ -205,7 +205,7 @@
         seenCredits: i8 0,
         Motion: [
           f64 0,
-          f64 -0.0784000015258789,
+          f64 0,
           f64 0
         ],
         Health: f32 20,
@@ -214,8 +214,8 @@
         OnGround: i8 1,
         Dimension: "minecraft:overworld",
         Rotation: [
-          f32 90.0004653930664,
-          f32 86.99999237060547
+          f32 0,
+          f32 0
         ],
         XpLevel: i32 0,
         warden_spawn_tracker: {
@@ -225,9 +225,9 @@
         },
         Score: i32 0,
         Pos: [
-          f64 0,
+          f64 0.5,
           f64 -63,
-          f64 0
+          f64 0.5
         ],
         Fire: i16 -20,
         XpP: f32 0,
