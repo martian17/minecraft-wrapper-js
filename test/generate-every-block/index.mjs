@@ -83,7 +83,7 @@ if(exists){
 
 await fs.mkdir(worldPath);
 
-const level = decodeRNBT(""+await fs.readFile(Path.join(__dirname,"./level.rnbt")));
+const level = decodeRNBT(""+await fs.readFile(Path.join(__dirname,"../fixtures/level-blank-noon.rnbt")));
 
 level[""].Data.LevelName = worldName;
 level[""].Data.LastPlayed = new NBT_Long(BigInt(Date.now()));
