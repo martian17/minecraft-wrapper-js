@@ -25,7 +25,7 @@ import {exec as exec_base} from "child_process";
 const exec = util.promisify(exec_base);
 
 
-import McVersions from "./mc-versions.mjs";
+import McVersions from "../utils/mc-versions.mjs";
 
 
 import os from "os";
