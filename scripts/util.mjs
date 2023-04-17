@@ -24,6 +24,7 @@ export const paths = {
     root:      Path.join(__dirname,"../"),
     assets:    Path.join(__dirname,"../assets"),
     devAssets: Path.join(__dirname,"../dev-assets"),
+    test:      Path.join(__dirname,"../test"),
     tmp:       Path.join(os.tmpdir(),"slimejs"),
     homedir
 };
