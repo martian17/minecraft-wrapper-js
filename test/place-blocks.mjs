@@ -1,4 +1,4 @@
-import {World} from "../lib/index.mjs";
+import {World} from "#lib/index.mjs";
 
 const path = process.argv[2];
 

@@ -1,4 +1,4 @@
-import {unpackArray_64BEA as unpack, PackedArray_64BEA_Builder as Packer} from "../lib/packedArray64BEA.mjs";
+import {unpackArray_64BEA as unpack, PackedArray_64BEA_Builder as Packer} from "#lib/packedArray64BEA.mjs";
 import {newarr,arreq} from "ds-js/arrutil.mjs";
 
 const len = 1000000;
