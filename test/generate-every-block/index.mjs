@@ -145,6 +145,25 @@ for(let i = 0; i < states.length; i++){
 }
 console.log("Block placement complete");
 
+console.log("Filling void");
+const white_concrete = {Name:"minecraft:white_concrete"};
+for(let [rx,rz,region] of dim.regionCache){
+    for(let [id,chunk] of region.chunkCache){
+        const x0 = rx*512+(id%32)*16;
+        const z0 = rz*512+Math.floor(id/32)*16;
+        for(let cx = 0; cx < 16; cx++){
+            for(let cz = 0; cz < 16; cz++){
+                const x = x0+cx;
+                const z = z0+cz;
+                //console.log(await dim.getBlock);
+                if((await dim.getBlock(x,-64,z)).Name === "minecraft:air")
+                    await dim.setBlock(x,-64,z,white_concrete);
+            }
+        }
+    }
+}
+console.log("Filled void");
+
 await dim.save();
 
 console.log(`World saved. Now open ${worldName} in your minecraft client.`);
