@@ -9,7 +9,8 @@ module.exports = {
   },
   "env": {
     "es6": true,
-    "node": true
+    "node": true,
+    "es2020": true
   },
   "rules": {
     "no-unused-vars": ["error", {
